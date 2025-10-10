@@ -66,6 +66,19 @@ def main():
         problems_collection.create_index([("tags", ASCENDING)], name="idx_tags")
         print("Indexes created/ensured for 'problems' collection.")
 
+        # --- Create 'submissions' collection and indexes ---
+        try:
+            db.create_collection("submissions")
+            print("Collection 'submissions' created.")
+        except CollectionInvalid:
+            print("Collection 'submissions' already exists.")
+
+        submissions_collection = db["submissions"]
+        submissions_collection.create_index([("user_id", ASCENDING)], name="idx_user_id")
+        submissions_collection.create_index([("problem_id", ASCENDING)], name="idx_problem_id")
+        submissions_collection.create_index([("user_id", ASCENDING), ("problem_id", ASCENDING)], name="idx_user_problem")
+        print("Indexes created/ensured for 'submissions' collection.")
+
         print("\nDatabase initialization complete!")
 
     except Exception as e:

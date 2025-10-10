@@ -37,6 +37,10 @@ The database initialization is now handled automatically by the `db-init` servic
 -   **`problems` collection:**
     -   Index on `difficulty`
     -   Index on `tags`
+-   **`submissions` collection:**
+    -   Index on `user_id`
+    -   Index on `problem_id`
+    -   Compound index on `(user_id, problem_id)`
 
 ## Services
 
