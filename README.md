@@ -31,17 +31,15 @@ The `--build` flag is only necessary the first time or after changing the initia
 ## Database Initialization
 The database initialization is now handled automatically by the `db-init` service. When the services start, a script runs which creates the `annaforces_db` database and the following collections and indexes:
 
--   **`users` collection:**
-    -   Unique index on `username`
-    -   Unique index on `email`
+-   **`users` collection:** The `username` is the primary key (`_id`).
+    -   Unique index on `email`.
 -   **`problems` collection:**
-    -   Index on `difficulty`
-    -   Index on `tags`
+    -   Index on `difficulty`.
+    -   Index on `tags`.
 -   **`submissions` collection:**
-    -   Index on `user_id`
-    -   Index on `problem_id`
-    -   Compound index on `(user_id, problem_id)`
-
+    -   Index on `username`.
+    -   Index on `problem_id`.
+    -   Compound index on `(username, problem_id)`.
 ## Services
 
 ### MongoDB

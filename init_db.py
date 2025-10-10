@@ -42,6 +42,20 @@ def main():
     try:
         db = client[DB_NAME]
 
+        # Drop collections for a clean slate in development
+        print("Dropping collections for a clean start...")
+        try:
+            db.drop_collection("users")
+            print("Collection 'users' dropped.")
+        except Exception:
+            pass # Collection didn't exist
+        try:
+            db.drop_collection("submissions")
+            print("Collection 'submissions' dropped.")
+        except Exception:
+            pass # Collection didn't exist
+        print("-" * 20)
+
         # --- Create 'users' collection and indexes ---
         try:
             db.create_collection("users")
@@ -50,9 +64,8 @@ def main():
             print("Collection 'users' already exists.")
         
         users_collection = db["users"]
-        users_collection.create_index([("username", ASCENDING)], unique=True, name="idx_username_unique")
         users_collection.create_index([("email", ASCENDING)], unique=True, name="idx_email_unique")
-        print("Indexes created/ensured for 'users' collection.")
+        print("Indexes created/ensured for 'users' collection on email.")
 
         # --- Create 'problems' collection and indexes ---
         try:
@@ -74,9 +87,9 @@ def main():
             print("Collection 'submissions' already exists.")
 
         submissions_collection = db["submissions"]
-        submissions_collection.create_index([("user_id", ASCENDING)], name="idx_user_id")
+        submissions_collection.create_index([("username", ASCENDING)], name="idx_username")
         submissions_collection.create_index([("problem_id", ASCENDING)], name="idx_problem_id")
-        submissions_collection.create_index([("user_id", ASCENDING), ("problem_id", ASCENDING)], name="idx_user_problem")
+        submissions_collection.create_index([("username", ASCENDING), ("problem_id", ASCENDING)], name="idx_user_problem")
         print("Indexes created/ensured for 'submissions' collection.")
 
         print("\nDatabase initialization complete!")
