@@ -29,7 +29,7 @@ docker-compose up --build -d
 The `--build` flag is only necessary the first time or after changing the initialization script.
 
 ## Database Initialization
-The database initialization is now handled automatically by the `db-init` service. When the services start, a script runs which creates the `annaforces_db` database and the following collections and indexes:
+The database initialization is now handled automatically by the `db-init` service. When the services start, a script runs which creates the `data` database and the following collections and indexes:
 
 -   **`users` collection:** The `username` is the primary key (`_id`).
     -   Unique index on `email`.
@@ -39,7 +39,10 @@ The database initialization is now handled automatically by the `db-init` servic
 -   **`submissions` collection:**
     -   Index on `username`.
     -   Index on `problem_id`.
+    -   Index on `verdict`.
     -   Compound index on `(username, problem_id)`.
+    -   Compound index on `(username, verdict)`.
+    -   Compound index on `(problem_id, verdict)`.
 ## Services
 
 ### MongoDB
