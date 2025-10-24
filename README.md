@@ -43,6 +43,8 @@ The database initialization is now handled automatically by the `db-init` servic
     -   Compound index on `(username, problem_id)`.
     -   Compound index on `(username, verdict)`.
     -   Compound index on `(problem_id, verdict)`.
+-   **`submissions_queue` collection:**
+    -   Unique index on `submission_id`.
 ## Services
 
 ### MongoDB

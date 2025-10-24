@@ -76,6 +76,7 @@ def main():
                 db.create_collection("problems")
                 print("Collection 'problems' created.")
                 problems_collection = db["problems"]
+                problems_collection.create_index([("id", ASCENDING)], unique=True, name="idx_problem_id_unique")
                 problems_collection.create_index([("difficulty", ASCENDING)], name="idx_difficulty")
                 problems_collection.create_index([("tags", ASCENDING)], name="idx_tags")
                 print("Indexes created for 'problems' collection.")
@@ -84,6 +85,7 @@ def main():
         else:
             print("Collection 'problems' already exists. Ensuring indexes.")
             problems_collection = db["problems"]
+            problems_collection.create_index([("id", ASCENDING)], unique=True, name="idx_problem_id_unique")
             problems_collection.create_index([("difficulty", ASCENDING)], name="idx_difficulty")
             problems_collection.create_index([("tags", ASCENDING)], name="idx_tags")
             print("Indexes ensured for 'problems' collection.")
@@ -115,6 +117,41 @@ def main():
             submissions_collection.create_index([("problem_id", ASCENDING), ("verdict", ASCENDING)], name="idx_problem_verdict")
             print("Indexes ensured for 'submissions' collection.")
 
+        # --- Create 'submissions_queue' collection and indexes ---
+        if "submissions_queue" not in db.list_collection_names():
+            try:
+                db.create_collection("submissions_queue")
+                print("Collection 'submissions_queue' created.")
+                submissions_queue_collection = db["submissions_queue"]
+                submissions_queue_collection.create_index([("submission_id", ASCENDING)], unique=True, name="idx_submission_id_unique")
+                print("Index created for 'submissions_queue' collection on submission_id.")
+            except CollectionInvalid:
+                print("Collection 'submissions_queue' already exists.")
+        else:
+            print("Collection 'submissions_queue' already exists. Ensuring indexes.")
+            submissions_queue_collection = db["submissions_queue"]
+            submissions_queue_collection.create_index([("submission_id", ASCENDING)], unique=True, name="idx_submission_id_unique")
+            print("Index ensured for 'submissions_queue' collection on submission_id.")
+
+
+        # --- Create 'contests' collection and indexes ---
+        if "contests" not in db.list_collection_names():
+            try:
+                db.create_collection("contests")
+                print("Collection 'contests' created.")
+                contests_collection = db["contests"]
+                contests_collection.create_index([("id", ASCENDING)], unique=True, name="idx_contest_id_unique")
+                contests_collection.create_index([("authors", ASCENDING)], name="idx_authors")
+                print("Indexes created for 'contests' collection.")
+            except CollectionInvalid:
+                print("Collection 'contests' already exists.")
+        else:
+            print("Collection 'contests' already exists. Ensuring indexes.")
+            contests_collection = db["contests"]
+            contests_collection.create_index([("id", ASCENDING)], unique=True, name="idx_contest_id_unique")
+            contests_collection.create_index([("authors", ASCENDING)], name="idx_authors")
+            print("Indexes ensured for 'contests' collection.")
+        
         print("\nDatabase initialization check complete!")
 
     except Exception as e:
