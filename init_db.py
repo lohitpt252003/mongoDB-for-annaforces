@@ -117,21 +117,32 @@ def main():
             submissions_collection.create_index([("problem_id", ASCENDING), ("verdict", ASCENDING)], name="idx_problem_verdict")
             print("Indexes ensured for 'submissions' collection.")
 
+        # --- Drop specific index from 'submissions_queue' collection ---
+        if "submissions_queue" in db.list_collection_names():
+            submissions_queue_collection = db["submissions_queue"]
+            if "idx_submission_id_unique" in submissions_queue_collection.index_information():
+                print("Dropping index 'idx_submission_id_unique' from 'submissions_queue' collection.")
+                submissions_queue_collection.drop_index("idx_submission_id_unique")
+                print("Index 'idx_submission_id_unique' dropped.")
+
         # --- Create 'submissions_queue' collection and indexes ---
         if "submissions_queue" not in db.list_collection_names():
             try:
                 db.create_collection("submissions_queue")
                 print("Collection 'submissions_queue' created.")
                 submissions_queue_collection = db["submissions_queue"]
-                submissions_queue_collection.create_index([("submission_id", ASCENDING)], unique=True, name="idx_submission_id_unique")
-                print("Index created for 'submissions_queue' collection on submission_id.")
+                # We are not creating a unique index on submission_id here anymore
+                print("No unique index created for 'submissions_queue' collection on submission_id.")
             except CollectionInvalid:
                 print("Collection 'submissions_queue' already exists.")
         else:
-            print("Collection 'submissions_queue' already exists. Ensuring indexes.")
+            print("Collection 'submissions_queue' already exists. Ensuring no unique index on submission_id.")
             submissions_queue_collection = db["submissions_queue"]
-            submissions_queue_collection.create_index([("submission_id", ASCENDING)], unique=True, name="idx_submission_id_unique")
-            print("Index ensured for 'submissions_queue' collection on submission_id.")
+            # Ensure no unique index on submission_id
+            if "idx_submission_id_unique" in submissions_queue_collection.index_information():
+                print("Dropping existing unique index 'idx_submission_id_unique' from 'submissions_queue' collection.")
+                submissions_queue_collection.drop_index("idx_submission_id_unique")
+                print("Index 'idx_submission_id_unique' dropped.")
 
 
         # --- Create 'contests' collection and indexes ---
